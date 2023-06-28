@@ -1,23 +1,20 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+require("dotenv").config();
 
+const authRouter = require("./routes/api/auth");
 const contactsRouter = require("./routes/api/contacts");
 
-// создаем сервер основной
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
-// ?
-app.use(logger(formatsLogger));
 
-// cors - разрешает кроссдоменный запрос ( запрет серверов КОРС)
+app.use(logger(formatsLogger));
 app.use(cors());
-// для передачи тела в JSON формате (  когда записываем на сервер)
 app.use(express.json());
 
-// (основной запрос, все последующие ищи в этом файле)
-
+app.use("/api/auth", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {
